@@ -1,0 +1,217 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "URL Shortener API",
+    "version": "1.0.0",
+    "description": "A REST API for shortening URLs with expiration, analytics, and click tracking"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/shorten": {
+      "post": {
+        "summary": "Create a shortened URL",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "originalUrl": {
+                    "type": "string"
+                  },
+                  "alias": {
+                    "type": "string",
+                    "maxLength": 20
+                  },
+                  "expiresAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": ["originalUrl"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Shortened URL created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "shortUrl": {
+                      "type": "string"
+                    },
+                    "originalUrl": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data"
+          }
+        }
+      }
+    },
+    "/{shortUrl}": {
+      "get": {
+        "summary": "Redirect to the original URL",
+        "parameters": [
+          {
+            "name": "shortUrl",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirection successful"
+          },
+          "404": {
+            "description": "Short URL not found"
+          },
+          "410": {
+            "description": "URL expired"
+          }
+        }
+      }
+    },
+    "/info/{shortUrl}": {
+      "get": {
+        "summary": "Get information about a shortened URL",
+        "parameters": [
+          {
+            "name": "shortUrl",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Information retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "originalUrl": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "clickCount": {
+                      "type": "integer"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Short URL not found"
+          }
+        }
+      }
+    },
+    "/analytics/{shortUrl}": {
+      "get": {
+        "summary": "Get analytics for a shortened URL",
+        "parameters": [
+          {
+            "name": "shortUrl",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Analytics data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "clickCount": {
+                      "type": "integer"
+                    },
+                    "recentClicks": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "clickTime": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "ipAddress": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Short URL not found"
+          }
+        }
+      }
+    },
+    "/delete/{shortUrl}": {
+      "delete": {
+        "summary": "Delete a shortened URL",
+        "parameters": [
+          {
+            "name": "shortUrl",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Short URL deleted successfully"
+          },
+          "404": {
+            "description": "Short URL not found"
+          }
+        }
+      }
+    }
+  }
+}
