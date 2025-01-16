@@ -7,28 +7,33 @@ Docker
 
 После клонирования репозитория откройте терминал и установите необходимые зависимости
 
-#backend
-cd backend
-npm install 
+# backend
 
-#frontend
-cd front
-npm install
+- cd backend
+
+- npm install 
+
+# frontend
+
+- cd front
+
+- npm install
 
 Теперь вернитесь в корневую папку и создайте проект с помощью docker
-docker compose up --build
+
+- docker compose up --build
 
 Это приведет к созданию образов и контейнеров docker. После этого вы сможете просмотреть выходные данные проекта
 
-#frontend
-localhost:3000
+# frontend
+- localhost:3000
 
 
-#backend
-localhost:5000/api
+# backend
+- localhost:5000/api
 
-#swagger
-localhost:5000/api-docs
+# swagger
+- localhost:5000/api-docs
 
 
 
