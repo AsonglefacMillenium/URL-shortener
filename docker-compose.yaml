@@ -59,6 +59,17 @@ services:
       - DB_NAME=urlshortener
     networks:
       - urlshortener_network
+
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
 volumes:
   db-data:
 networks:
